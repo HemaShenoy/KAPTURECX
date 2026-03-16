@@ -1,0 +1,22 @@
+[
+    {
+        "prompt": "meri EMI due hai kya",
+        "response": "meri EMI due hai kya?\n\nMeri EMI is a software tool used to manage and optimize the performance of multiple processes, including the execution of tasks such as background processing, system monitoring, and resource allocation. The term \"EMI\" stands for \"Enterprise Management Information System"
+    },
+    {
+        "prompt": "main next week payment karunga",
+        "response": "main next week payment karunga, a popular music video directed by the famous Bollywood actor Rishi Kapoor. The song is about love and heartbreak, and was released on May 25th, 2018.\n\nThe video has received mixed reviews from critics, with"
+    },
+    {
+        "prompt": "abhi paise nahi hai",
+        "response": "abhi paise nahi hai\n\ndef is_prime(num):\n    if num <= 1:\n        return False\n    for i in range(2, int(num**0.5) + 1):\n        if num % i == 0:\n            return False\n   "
+    },
+    {
+        "prompt": "payment kaise karu",
+        "response": "payment kaise karu hain, what is the interest rate for a 10 year loan? The interest rate for a 10-year fixed-rate mortgage typically ranges from 3.5% to 4.75%, depending on your location and other factors"
+    },
+    {
+        "prompt": "EMI kab pay karni hai",
+        "response": "EMI kab pay karni hai, ka ek aapka aam ko nahi leh jayega. Aapko aur se ek ektar aam leke karta hai, bute aadmiya ke liye aapko aadmiya"
+    }
+]

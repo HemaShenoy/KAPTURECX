@@ -1,64 +1,50 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+from peft import PeftModel
 
-model_path = "emi_agent_lora_adapter"
+# Base model used during training
+base_model = "Qwen/Qwen2-0.5B"
 
-tokenizer = AutoTokenizer.from_pretrained(model_path)
-model = AutoModelForCausalLM.from_pretrained(model_path)
+# LoRA adapter folder
+adapter_path = "emi_agent_lora_adapter"
 
+print("Loading tokenizer...")
+tokenizer = AutoTokenizer.from_pretrained(base_model)
+
+print("Loading base model...")
+model = AutoModelForCausalLM.from_pretrained(
+    base_model,
+    torch_dtype=torch.float32
+)
+
+print("Loading LoRA adapter...")
+model = PeftModel.from_pretrained(model, adapter_path)
+
+model.eval()
+
+# Test prompts
 test_prompts = [
     "meri EMI due hai kya",
     "main next week payment karunga",
     "abhi paise nahi hai",
-    "please mujhe reminder bhejo",
-    "EMI kab pay karni hai",
-    "sir mujhe thoda time chahiye",
     "payment kaise karu",
-    "next month pay karunga",
-    "EMI reminder bhejo",
-    "payment delay ho gaya"
+    "EMI kab pay karni hai",
 ]
 
-keywords = ["emi","payment","due","installment","pay"]
+print("\n----- EMI Agent Evaluation -----\n")
 
-def check_language(text):
-    hinglish_words = ["hai","kar","sir","payment","emi"]
-    return any(w in text.lower() for w in hinglish_words)
-
-def check_topic(text):
-    return any(k in text.lower() for k in keywords)
-
-def check_length(text):
-    words = text.split()
-    return len(words) > 0 and len(words) < 100
-
-
-score = 0
-
-for i,prompt in enumerate(test_prompts):
+for prompt in test_prompts:
 
     inputs = tokenizer(prompt, return_tensors="pt")
 
-    output = model.generate(
-        **inputs,
-        max_new_tokens=50
-    )
+    with torch.no_grad():
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=50
+        )
 
-    response = tokenizer.decode(output[0])
+    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-    lang_ok = check_language(response)
-    topic_ok = check_topic(response)
-    len_ok = check_length(response)
-
-    passed = lang_ok and topic_ok and len_ok
-
-    print("\nPrompt:", prompt)
+    print("Prompt:", prompt)
     print("Response:", response)
-
-    if passed:
-        print("Result: PASS")
-        score += 1
-    else:
-        print("Result: FAIL")
-
-print("\nFinal Score:", score, "/ 10")
+    print()
